@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 
 void main() {
+  // FlutterBluePlus.setLogLevel(LogLevel.verbose, color: true);
   runApp(const MyApp());
 }
 
@@ -28,10 +30,11 @@ class MyApp extends StatelessWidget {
         //
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.black),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      // home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const EpochTimerApp(),
     );
   }
 }
@@ -120,6 +123,63 @@ class _MyHomePageState extends State<MyHomePage> {
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+}
+
+class EpochTimerApp extends StatefulWidget {
+  const EpochTimerApp({super.key});
+
+  @override
+  _EpochTimerAppState createState() => _EpochTimerAppState();
+}
+
+class _EpochTimerAppState extends State<EpochTimerApp> {
+
+  // initialise global variables
+  int _epochTimestamp = 0;
+
+  Timer? _timer;
+
+  @override
+
+
+  void initState() {
+    super.initState();
+    _startTimer();
+  }
+
+  @override
+
+
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  void _startTimer() {
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        _epochTimestamp = DateTime.now().millisecondsSinceEpoch;
+      });
+    });
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('Epoch Timer'),
+        ),
+        body: Center(
+          child: Text(
+            _epochTimestamp.toString(),
+            style: TextStyle(fontSize: 48),
+          ),
+        ),
+      ),
     );
   }
 }
